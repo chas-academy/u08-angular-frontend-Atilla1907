@@ -58,7 +58,7 @@ export class TodoForm implements OnInit {
 
     this.todoForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      description: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(500)]],
+      description: ['', [Validators.minLength(5), Validators.maxLength(500)]],
       completed: [false],
       dueDate: [defaultDate, Validators.required]
     });
@@ -84,7 +84,13 @@ export class TodoForm implements OnInit {
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    const formValue = this.todoForm.value;
+    const formValue = { ...this.todoForm.value };
+    
+    // Remove empty description to avoid API validation errors
+    if (!formValue.description || formValue.description.trim() === '') {
+      delete formValue.description;
+    }
+    
     console.log('Submitting todo:', formValue);
 
     if (this.isEditMode && this.todoId) {

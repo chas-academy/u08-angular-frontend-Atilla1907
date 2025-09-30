@@ -31,7 +31,7 @@
 
       <div class="form-group">
         <label for="description" class="form-label">
-          Description <span class="required">*</span>
+          Description
         </label>
         <textarea
           id="description"
@@ -43,7 +43,6 @@
           aria-describedby="description-error"
         ></textarea>
         <div *ngIf="isFieldInvalid('description')" class="error-text" id="description-error">
-          <span *ngIf="hasError('description', 'required')">Description is required</span>
           <span *ngIf="hasError('description', 'minlength')">Description must be at least 5 characters</span>
           <span *ngIf="hasError('description', 'maxlength')">Description cannot exceed 500 characters</span>
         </div>

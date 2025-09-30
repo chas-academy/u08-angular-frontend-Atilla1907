@@ -25,7 +25,10 @@ export class TodoService {
         this.todosSubject.next(todos);
         this.loadingSubject.next(false);
       }),
-      catchError(this.handleError)
+      catchError(error => {
+        this.loadingSubject.next(false);
+        return this.handleError(error);
+      })
     );
   }
 
@@ -33,7 +36,10 @@ export class TodoService {
     this.loadingSubject.next(true);
     return this.http.get<Todo>(`${this.apiUrl}/${id}`).pipe(
       tap(() => this.loadingSubject.next(false)),
-      catchError(this.handleError)
+      catchError(error => {
+        this.loadingSubject.next(false);
+        return this.handleError(error);
+      })
     );
   }
 
@@ -45,7 +51,10 @@ export class TodoService {
         this.todosSubject.next([...currentTodos, newTodo]);
         this.loadingSubject.next(false);
       }),
-      catchError(this.handleError)
+      catchError(error => {
+        this.loadingSubject.next(false);
+        return this.handleError(error);
+      })
     );
   }
 
@@ -61,7 +70,10 @@ export class TodoService {
         }
         this.loadingSubject.next(false);
       }),
-      catchError(this.handleError)
+      catchError(error => {
+        this.loadingSubject.next(false);
+        return this.handleError(error);
+      })
     );
   }
 
@@ -73,7 +85,10 @@ export class TodoService {
         this.todosSubject.next(currentTodos.filter(t => t._id !== id));
         this.loadingSubject.next(false);
       }),
-      catchError(this.handleError)
+      catchError(error => {
+        this.loadingSubject.next(false);
+        return this.handleError(error);
+      })
     );
   }
 
@@ -83,8 +98,12 @@ export class TodoService {
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Client Error: ${error.error.message}`;
     } else {
-      errorMessage = `Server Error (${error.status}): ${error.message}`;
+      // Try to get the actual error message from the API
+      const apiError = error.error?.error || error.error?.message || error.message;
+      errorMessage = `Server Error (${error.status}): ${apiError}`;
       console.error('Full error details:', error.error);
+      console.error('Error status:', error.status);
+      console.error('Error message:', apiError);
     }
     
     console.error(errorMessage);
