@@ -1,0 +1,62 @@
+<div class="todo-list-container">
+  <header class="header">
+    <h1>My Todos</h1>
+    <a routerLink="/todos/new" class="btn btn-primary">
+      <span class="icon">+</span> New Todo
+    </a>
+  </header>
+
+  <div *ngIf="errorMessage" class="error-message" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="loading$ | async" class="loading" role="status">
+    <div class="spinner"></div>
+    <p>Loading todos...</p>
+  </div>
+
+  <div *ngIf="!(loading$ | async)" class="todos-grid">
+    <div *ngIf="(todos$ | async)?.length === 0" class="empty-state">
+      <p>No todos yet. Create your first one!</p>
+    </div>
+
+    <div *ngFor="let todo of todos$ | async" class="todo-card" [class.completed]="todo.completed">
+      <div class="todo-header">
+        <input 
+          type="checkbox" 
+          [checked]="todo.completed" 
+          (change)="toggleComplete(todo)"
+          [id]="'todo-' + todo._id"
+          class="todo-checkbox"
+          [attr.aria-label]="'Mark ' + todo.title + ' as ' + (todo.completed ? 'incomplete' : 'complete')"
+        />
+        <h3 [class.completed-text]="todo.completed">
+          <label [for]="'todo-' + todo._id">{{ todo.title }}</label>
+        </h3>
+      </div>
+
+      <p class="todo-description">{{ todo.description }}</p>
+      
+      <div class="todo-meta">
+        <span class="due-date" [class.overdue]="todo.dueDate < (getCurrentDate()) && !todo.completed">
+          📅 Due: {{ todo.dueDate | date:'short' }}
+        </span>
+        <span class="status-badge" [class.completed]="todo.completed">
+          {{ todo.completed ? '✓ Completed' : '○ Pending' }}
+        </span>
+      </div>
+
+      <div class="todo-actions">
+        <a [routerLink]="['/todos', todo._id]" class="btn btn-secondary" aria-label="View details">
+          View
+        </a>
+        <a [routerLink]="['/todos', todo._id, 'edit']" class="btn btn-secondary" aria-label="Edit todo">
+          Edit
+        </a>
+        <button (click)="deleteTodo(todo._id)" class="btn btn-danger" aria-label="Delete todo">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

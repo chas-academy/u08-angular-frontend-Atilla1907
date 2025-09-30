@@ -1,0 +1,62 @@
+<div class="detail-container">
+  <div *ngIf="errorMessage" class="error-message" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="loading$ | async" class="loading" role="status">
+    <div class="spinner"></div>
+    <p>Loading todo details...</p>
+  </div>
+
+  <div *ngIf="!(loading$ | async) && (todo$ | async) as todo" class="detail-card">
+    <header class="detail-header">
+      <button (click)="goBack()" class="btn-back" aria-label="Go back to list">
+        ← Back
+      </button>
+      <div class="header-actions">
+        <a [routerLink]="['/todos', todo._id, 'edit']" class="btn btn-primary">
+          Edit
+        </a>
+        <button (click)="deleteTodo(todo._id)" class="btn btn-danger">
+          Delete
+        </button>
+      </div>
+    </header>
+
+    <div class="detail-content">
+      <div class="status-indicator" [class.completed]="todo.completed">
+        {{ todo.completed ? '✓ Completed' : '○ Pending' }}
+      </div>
+
+      <h1 class="todo-title" [class.completed]="todo.completed">
+        {{ todo.title }}
+      </h1>
+
+      <div class="todo-info">
+        <div class="info-item">
+          <span class="label">Description:</span>
+          <p class="description">{{ todo.description }}</p>
+        </div>
+
+        <div class="info-item">
+          <span class="label">Due Date:</span>
+          <p class="value">{{ todo.dueDate | date:'fullDate' }}</p>
+        </div>
+
+        <div class="info-item">
+          <span class="label">Status:</span>
+          <p class="value">
+            <span class="status-badge" [class.completed]="todo.completed">
+              {{ todo.completed ? 'Completed' : 'Pending' }}
+            </span>
+          </p>
+        </div>
+
+        <div class="info-item" *ngIf="todo._id">
+          <span class="label">ID:</span>
+          <p class="value mono">{{ todo._id }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
