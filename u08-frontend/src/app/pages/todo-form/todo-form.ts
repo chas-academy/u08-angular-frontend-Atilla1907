@@ -85,6 +85,7 @@ export class TodoForm implements OnInit {
     this.errorMessage = '';
 
     const formValue = this.todoForm.value;
+    console.log('Submitting todo:', formValue);
 
     if (this.isEditMode && this.todoId) {
       this.todoService.updateTodo(this.todoId, formValue).subscribe({

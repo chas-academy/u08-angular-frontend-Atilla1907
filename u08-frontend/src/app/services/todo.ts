@@ -84,6 +84,7 @@ export class TodoService {
       errorMessage = `Client Error: ${error.error.message}`;
     } else {
       errorMessage = `Server Error (${error.status}): ${error.message}`;
+      console.error('Full error details:', error.error);
     }
     
     console.error(errorMessage);
