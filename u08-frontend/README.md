@@ -1,7 +1,7 @@
 Todo App - Angular Frontend
 A simple Angular application for managing todos with full CRUD functionality. Connects to a REST API backend.
 
-App: [Coming soon - Netlify]
+App: https://stellular-torte-6385aa.netlify.app/todos
 API: https://u05restfulapi.onrender.com
 
 Features:
