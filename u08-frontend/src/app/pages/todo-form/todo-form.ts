@@ -91,7 +91,18 @@ export class TodoForm implements OnInit {
       delete formValue.description;
     }
     
-    console.log('Submitting todo:', formValue);
+    // Convert date string to ISO format for the API
+    if (formValue.dueDate) {
+      formValue.dueDate = new Date(formValue.dueDate).toISOString();
+    }
+    
+    console.log('Form value before submission:', formValue);
+    console.log('Form value type check:', {
+      title: typeof formValue.title,
+      description: typeof formValue.description,
+      completed: typeof formValue.completed,
+      dueDate: typeof formValue.dueDate
+    });
 
     if (this.isEditMode && this.todoId) {
       this.todoService.updateTodo(this.todoId, formValue).subscribe({
