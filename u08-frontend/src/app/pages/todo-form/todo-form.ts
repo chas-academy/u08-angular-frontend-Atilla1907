@@ -86,44 +86,46 @@ export class TodoForm implements OnInit {
 
     const formValue = { ...this.todoForm.value };
     
-    // Remove empty description to avoid API validation errors
-    if (!formValue.description || formValue.description.trim() === '') {
-      delete formValue.description;
+    // Clean up the payload to match API expectations
+    const payload: any = {
+      title: formValue.title,
+      completed: formValue.completed
+    };
+    
+    // Only add description if it has content
+    if (formValue.description && formValue.description.trim() !== '') {
+      payload.description = formValue.description;
     }
     
     // Convert date string to ISO format for the API
     if (formValue.dueDate) {
-      formValue.dueDate = new Date(formValue.dueDate).toISOString();
+      payload.dueDate = new Date(formValue.dueDate).toISOString();
     }
     
-    console.log('Form value before submission:', formValue);
-    console.log('Form value type check:', {
-      title: typeof formValue.title,
-      description: typeof formValue.description,
-      completed: typeof formValue.completed,
-      dueDate: typeof formValue.dueDate
-    });
+    console.log('Payload being sent to API:', payload);
+    console.log('Payload JSON:', JSON.stringify(payload, null, 2));
 
     if (this.isEditMode && this.todoId) {
-      this.todoService.updateTodo(this.todoId, formValue).subscribe({
+      this.todoService.updateTodo(this.todoId, payload).subscribe({
         next: () => {
           this.router.navigate(['/todos', this.todoId]);
         },
         error: (err) => {
           this.errorMessage = 'Failed to update todo. Please try again.';
           this.isSubmitting = false;
-          console.error(err);
+          console.error('Update error:', err);
         }
       });
     } else {
-      this.todoService.createTodo(formValue).subscribe({
+      this.todoService.createTodo(payload).subscribe({
         next: (newTodo) => {
+          console.log('Todo created successfully:', newTodo);
           this.router.navigate(['/todos', newTodo._id]);
         },
         error: (err) => {
           this.errorMessage = 'Failed to create todo. Please try again.';
           this.isSubmitting = false;
-          console.error(err);
+          console.error('Create error:', err);
         }
       });
     }
