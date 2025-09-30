@@ -12,7 +12,7 @@ TypeScript + RxJS for reactive state
 Error handling and loading states
 
 Installation:
-git clone <repo-url>
+git clone 
 cd u08-frontend
 npm install
 ng serve
